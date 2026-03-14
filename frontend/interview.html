@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Entraînez-vous aux entretiens d'embauche avec un recruteur IA propulsé par Mistral.">
+    <title>💬 Coach Entretien — Décodeur de Pensées</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="interview.css">
+</head>
+<body>
+
+    <div class="background-glow"></div>
+
+    <main class="container">
+        <!-- Header -->
+        <header class="header">
+            <a href="/" class="back-link">← Décodeur de Pensées</a>
+            <div class="logo">
+                <span class="logo-icon">💬</span>
+                <h1>Coach Entretien</h1>
+            </div>
+            <p class="subtitle">Entraînez-vous avec un recruteur IA personnalisé.</p>
+        </header>
+
+        <!-- Phase 1: Setup -->
+        <section class="setup-section" id="setup-section">
+            <div class="setup-card">
+                <div class="field-group">
+                    <label for="cv-file">📄 Votre CV <span class="hint">(Importez un PDF/TXT ou collez le texte ci-dessous)</span></label>
+                    <input type="file" id="cv-file" accept=".pdf,.txt,.docx" class="file-input" style="margin-bottom: 0.8rem;">
+                    <textarea id="cv-input" rows="4" placeholder="Ou collez directement le texte de votre CV ici…"></textarea>
+                </div>
+                <div class="field-group">
+                    <label for="offer-input">🏢 Offre de stage/emploi <span class="hint">(collez le texte)</span></label>
+                    <textarea id="offer-input" rows="6" placeholder="Collez ici le texte de l'offre…"></textarea>
+                </div>
+                <button class="btn-start" id="btn-start">
+                    Démarrer l'entretien
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- Phase 2: Chat -->
+        <section class="chat-section" id="chat-section" hidden>
+            <div class="chat-messages" id="chat-messages"></div>
+
+            <div class="chat-input-area" id="chat-input-area">
+                <!-- Record Button (Voice Mode) -->
+                <button class="btn-voice-record" id="btn-voice-record" aria-label="Enregistrer une réponse vocale" title="Répondre vocalement">
+                    <span class="record-inner">
+                        <svg viewBox="0 0 24 24" fill="none" class="mic-icon" stroke="currentColor" stroke-width="2" width="20" height="20">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                            <line x1="12" y1="19" x2="12" y2="23"/>
+                            <line x1="8" y1="23" x2="16" y2="23"/>
+                        </svg>
+                        <span class="stop-icon" hidden>■</span>
+                    </span>
+                    <span class="pulse-ring"></span>
+                </button>
+                
+                <textarea id="user-input" rows="2" placeholder="Tapez ou dictez votre réponse…" autocomplete="off"></textarea>
+                
+                <button class="btn-send" id="btn-send" aria-label="Envoyer" title="Envoyer le texte">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg>
+                </button>
+            </div>
+
+            <button class="btn-end" id="btn-end">Terminer l'entretien</button>
+        </section>
+
+        <!-- Phase 3: Loading feedback -->
+        <section class="loading-section" id="loading-section" hidden>
+            <div class="loader-container">
+                <div class="loader"></div>
+                <p class="status-text" id="status-text">Analyse en cours…</p>
+            </div>
+        </section>
+
+        <!-- Phase 4: Feedback -->
+        <section class="feedback-section" id="feedback-section" hidden>
+            <div class="feedback-header-card">
+                <h2>📊 Compte Rendu d'Entretien</h2>
+                <div class="score-circle" id="score-circle">
+                    <span class="score-value" id="score-value">-</span>
+                    <span class="score-label">/10</span>
+                </div>
+                <p class="feedback-summary" id="feedback-summary"></p>
+            </div>
+
+            <div class="feedback-columns">
+                <div class="feedback-col">
+                    <h3>💪 Points forts</h3>
+                    <div id="strengths-list"></div>
+                </div>
+                <div class="feedback-col">
+                    <h3>📈 Axes d'amélioration</h3>
+                    <div id="improvements-list"></div>
+                </div>
+            </div>
+
+            <div class="advice-card" id="advice-card">
+                <h3>💡 Conseil principal</h3>
+                <p id="advice-text"></p>
+            </div>
+
+            <button class="btn-new-interview" id="btn-new-interview">
+                🔄 Nouvel entretien
+            </button>
+        </section>
+    </main>
+
+    <script src="interview.js"></script>
+</body>
+</html>

@@ -1,6 +1,10 @@
 fastapi==0.115.12
-uvicorn[standard]==0.34.2
-python-multipart==0.0.20
-mistralai==1.10.0
-pydantic-settings==2.8.1
+uvicorn[standard]
+mistralai>=1.1.0,<2.0.0
+python-multipart
+python-dotenv
+pydantic
+pydantic-settings
+PyMuPDF
+python-docx
 python-dotenv==1.1.0
