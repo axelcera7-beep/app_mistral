@@ -1,62 +1,66 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Générateur de Lettre — Décodeur de Pensées</title>
+    <title>Générateur de Lettre — JobMind</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="interview.css">
-    <link rel="stylesheet" href="coverletter.css">
+    <link rel="stylesheet" href="interview.css?v=5">
+    <link rel="stylesheet" href="coverletter.css?v=3">
 </head>
+
 <body>
 
     <div class="background-glow"></div>
 
     <main class="container">
-        <!-- Header -->
-        <header class="header">
-            <a href="/" class="back-link">← Décodeur de Pensées</a>
-            <div class="logo">
-                <span class="logo-icon">✍️</span>
-                <h1>Lettre de Motivation</h1>
-            </div>
-            <p class="subtitle">Générez une lettre de motivation sur-mesure qui vous ressemble vraiment.</p>
-        </header>
+        <a href="/" class="back-link" style="display:block;text-align:center">← JobMind</a>
 
         <!-- Phase 1: Setup Form -->
         <section class="setup-section" id="setup-section">
             <div class="setup-card">
                 <!-- CV Input -->
                 <div class="field-group">
-                    <label for="cv-file">📄 Votre Profil (CV) <span class="hint">(Importez un PDF/TXT/DOCX ou collez le texte ci-dessous)</span></label>
-                    <input type="file" id="cv-file" accept=".pdf,.txt,.docx" class="file-input" style="margin-bottom: 0.8rem;">
-                    <textarea id="cv-input" rows="3" placeholder="Ou collez directement le texte de votre profil…"></textarea>
+                    <label for="cv-file">📄 Votre Profil (CV) <span class="hint">(Importez un PDF/TXT/DOCX ou collez le
+                            texte ci-dessous)</span></label>
+                    <input type="file" id="cv-file" accept=".pdf,.txt,.docx" class="file-input"
+                        style="margin-bottom: 0.8rem;">
+                    <textarea id="cv-input" rows="3"
+                        placeholder="Ou collez directement le texte de votre profil…"></textarea>
                 </div>
 
                 <!-- Job Offer Input -->
                 <div class="field-group">
-                    <label for="offer-input">🏢 Offre d'emploi/stage ciblée <span class="hint">(collez le texte)</span></label>
-                    <textarea id="offer-input" rows="4" placeholder="Collez ici le texte de l'offre à laquelle vous postulez…"></textarea>
+                    <label for="offer-input">🏢 Offre d'emploi/stage ciblée <span class="hint">(collez le
+                            texte)</span></label>
+                    <textarea id="offer-input" rows="4"
+                        placeholder="Collez ici le texte de l'offre à laquelle vous postulez…"></textarea>
                 </div>
 
                 <!-- Style Examples (Optional) -->
                 <div class="field-group">
-                    <label>🖋 Votre style d'écriture <span class="hint">(Optionnel, importez 1 à 3 anciennes lettres pour imiter votre plume)</span></label>
+                    <label>🖋 Votre style d'écriture <span class="hint">(Optionnel, importez 1 à 3 anciennes lettres
+                            pour imiter votre plume)</span></label>
                     <input type="file" id="examples-files" accept=".pdf,.txt,.docx" class="file-input" multiple>
                 </div>
-                
+
                 <!-- Language Selection -->
                 <div class="field-group">
                     <label for="language-select">🌍 Langue de la lettre</label>
-                    <select id="language-select" class="file-input" style="padding: 0.8rem; background-color: var(--surface);">
+                    <select id="language-select" class="file-input"
+                        style="padding: 0.8rem; background-color: var(--surface);">
                         <option value="français">Français</option>
                         <option value="anglais">Anglais</option>
                     </select>
                 </div>
 
+                <p id="generate-error" hidden style="color: #ff4d6a; margin-top: 0.5rem; font-size: 0.9rem;"></p>
                 <button class="btn-start" id="btn-generate">
                     Générer ma lettre
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
                 </button>
             </div>
         </section>
@@ -65,7 +69,8 @@
         <section class="loading-section" id="loading-section" hidden>
             <div class="loader-container">
                 <div class="loader"></div>
-                <p class="status-text" id="status-text">Rédaction en cours… Cela prend généralement 10 à 20 secondes.</p>
+                <p class="status-text" id="status-text">Rédaction en cours… Cela prend généralement 10 à 20 secondes.
+                </p>
             </div>
         </section>
 
@@ -73,41 +78,53 @@
         <section class="result-section" id="result-section" hidden>
             <div class="result-card">
                 <h2>Tada ! Voici votre proposition :</h2>
-                
-                <div class="summary-box" id="result-summary">
-                    <!-- Explain what choices AI made -->
+
+                <div class="match-score-box" id="match-score-box"
+                    style="margin-bottom: 1.5rem; text-align: center; border-radius: var(--radius); padding: 1rem; font-weight: 500;">
+                    <!-- Match score will be displayed here -->
                 </div>
 
                 <div class="letter-container">
-                    <button class="btn-copy" id="btn-copy" aria-label="Copier la lettre" title="Copier au presse-papier">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
-                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    <button class="btn-copy" id="btn-copy" aria-label="Copier la lettre"
+                        title="Copier au presse-papier">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18"
+                            height="18">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
                         </svg> Copier
                     </button>
                     <div id="letter-content" class="letter-content"></div>
                 </div>
-                
+
                 <!-- Revision Area -->
                 <div class="revision-area" id="revision-area">
                     <h3>Une modification à apporter ?</h3>
                     <div class="field-group">
-                        <textarea id="revision-input" rows="2" placeholder="Ex: Rends-la plus courte, adopte un ton plus formel, ajoute une mention sur mon permis..."></textarea>
+                        <textarea id="revision-input" rows="2"
+                            placeholder="Ex: Rends-la plus courte, adopte un ton plus formel, ajoute une mention sur mon permis..."></textarea>
                     </div>
                     <button class="btn-secondary" id="btn-revise">
                         Modifier la lettre
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="margin-left: 0.5rem;"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16"
+                            height="16" style="margin-left: 0.5rem;">
+                            <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                        </svg>
                     </button>
-                    <p class="status-text hidden" id="revision-status">Mise à jour en cours…</p>
+                    <div id="revision-status" class="revision-status hidden">
+                        <div class="loader-mini"></div>
+                        <span>Mise à jour en cours…</span>
+                    </div>
                 </div>
-            </div>
 
-            <button class="btn-start" id="btn-new" style="margin-top: 2rem;">
-                🔄 Nouvelle lettre
-            </button>
+
+                <button class="btn-start" id="btn-new" style="margin-top: 2rem;">
+                    🔄 Nouvelle lettre
+                </button>
         </section>
     </main>
 
-    <script src="coverletter.js"></script>
+    <script src="auth.js?v=4"></script>
+    <script src="coverletter.js?v=2"></script>
 </body>
+
 </html>

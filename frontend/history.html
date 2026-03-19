@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Historique — Vos lettres de motivation et comptes rendus d'entretien">
+    <title>📚 Historique — JobMind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=4">
+    <link rel="stylesheet" href="history.css?v=4">
+
+</head>
+<body>
+
+    <div class="background-glow"></div>
+
+    <main class="container">
+        <a href="/" class="back-link" style="display:block;text-align:center">← JobMind</a>
+
+        <!-- Auth required message (shown if not logged in) -->
+        <section id="auth-required" hidden>
+            <div class="setup-card" style="text-align: center; padding: 3rem;">
+                <p style="font-size: 1.1rem; margin-bottom: 1.5rem;">🔐 Connectez-vous pour accéder à votre historique.</p>
+                <a href="/login" class="btn-start" style="display: inline-flex; width: auto; padding: 0.7rem 2rem; text-decoration: none;">
+                    Se connecter
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </div>
+        </section>
+
+        <!-- History content (shown if logged in) -->
+        <section id="history-content" hidden>
+            <!-- Tabs -->
+            <div class="history-tabs">
+                <button class="history-tab active" id="tab-letters" data-tab="letters">
+                    ✍️ Lettres de motivation
+                    <span class="tab-count" id="count-letters">0</span>
+                </button>
+                <button class="history-tab" id="tab-interviews" data-tab="interviews">
+                    💬 Entretiens
+                    <span class="tab-count" id="count-interviews">0</span>
+                </button>
+                <button class="history-tab" id="tab-jobs" data-tab="jobs">
+                    🚀 Jobs sauvegardés
+                    <span class="tab-count" id="count-jobs">0</span>
+                </button>
+
+            </div>
+
+            <!-- Letters list -->
+            <div id="panel-letters" class="history-panel">
+                <div id="letters-list" class="history-list"></div>
+                <p class="empty-state" id="empty-letters" hidden>Aucune lettre sauvegardée pour le moment.</p>
+            </div>
+
+            <!-- Interviews list -->
+            <div id="panel-interviews" class="history-panel" hidden>
+                <div id="interviews-list" class="history-list"></div>
+                <p class="empty-state" id="empty-interviews" hidden>Aucun entretien sauvegardé pour le moment.</p>
+            </div>
+
+            <!-- Saved Jobs list -->
+            <div id="panel-jobs" class="history-panel" hidden>
+                <div id="jobs-list" class="history-list"></div>
+                <p class="empty-state" id="empty-jobs" hidden>Aucune offre sauvegardée pour le moment.</p>
+            </div>
+
+        </section>
+
+        <!-- Detail modal / overlay -->
+        <section id="detail-overlay" class="detail-overlay" style="display:none">
+            <div class="detail-card">
+                <button class="detail-close" id="detail-close">✕</button>
+                <h2 id="detail-title"></h2>
+                <div class="detail-meta" id="detail-meta"></div>
+                <div class="detail-body" id="detail-body"></div>
+            </div>
+        </section>
+    </main>
+
+    <script src="auth.js?v=4"></script>
+    <script src="history.js?v=4"></script>
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+/* ============================================================
+   Login Page — Specific Styles
+   ============================================================ */
+
+.auth-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 1.5rem;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+.auth-tab {
+    flex: 1;
+    padding: 0.7rem 1rem;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-family: var(--font);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.auth-tab:hover {
+    color: var(--text);
+    background: var(--surface-hover);
+}
+
+.auth-tab.active {
+    color: var(--text);
+    background: var(--accent-soft);
+    border-bottom: 2px solid var(--accent);
+}
+
+.auth-form input[type="text"],
+.auth-form input[type="email"],
+.auth-form input[type="password"] {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.8rem;
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.auth-form input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.auth-form input::placeholder {
+    color: var(--text-muted);
+    opacity: 0.6;
+}
+
+.auth-error {
+    margin-top: 1rem;
+    padding: 0.7rem 1rem;
+    background: rgba(255, 77, 106, 0.1);
+    border: 1px solid rgba(255, 77, 106, 0.25);
+    border-radius: var(--radius-sm);
+    color: var(--red);
+    font-size: 0.85rem;
+    text-align: center;
+    animation: fadeIn 0.3s ease-out;
+}

@@ -1,3 +1,8 @@
+/**
+ * coverletter.js — Generate and revise cover letters.
+ * Relies on auth.js (apiRequest, withAuth, escapeHtml, debounce).
+ */
+
 // ---------------------------------------------------------------------------
 // DOM Elements
 // ---------------------------------------------------------------------------
@@ -16,11 +21,10 @@ const btnNew         = document.getElementById('btn-new');
 const btnCopy        = document.getElementById('btn-copy');
 const btnRevise      = document.getElementById('btn-revise');
 
-// Revision UI
 const revisionInput  = document.getElementById('revision-input');
 const revisionStatus = document.getElementById('revision-status');
+const generateError  = document.getElementById('generate-error');
 
-const resultSummary  = document.getElementById('result-summary');
 const letterContent  = document.getElementById('letter-content');
 
 // ---------------------------------------------------------------------------
@@ -31,23 +35,34 @@ function showSection(section) {
     section.hidden = false;
 }
 
+function showGenerateError(msg) {
+    if (!generateError) { console.error(msg); return; }
+    generateError.textContent = msg;
+    generateError.hidden = false;
+}
+
+function hideGenerateError() {
+    if (generateError) generateError.hidden = true;
+}
+
 // ---------------------------------------------------------------------------
-// 1. Generate Letter
+// 1. Generate Letter (debounced to prevent double-submission)
 // ---------------------------------------------------------------------------
-btnGenerate.addEventListener('click', async () => {
-    const cvFile = cvFileInput.files[0];
-    const userCvText = cvInput.value.trim();
-    const jobOffer = offerInput.value.trim();
+async function doGenerate() {
+    const cvFile      = cvFileInput.files[0];
+    const userCvText  = cvInput.value.trim();
+    const jobOffer    = offerInput.value.trim();
     const exampleFiles = examplesInputs.files;
-    const language = languageSelect.value;
+    const language    = languageSelect.value;
+
+    hideGenerateError();
 
     if (!cvFile && !userCvText) {
-        alert('Veuillez importer votre CV ou en coller le texte avant de commencer.');
+        showGenerateError('Veuillez importer votre CV ou en coller le texte avant de commencer.');
         return;
     }
-
     if (!jobOffer) {
-        alert('Veuillez coller l\'offre d\'emploi ciblée.');
+        showGenerateError("Veuillez coller l'offre d'emploi ciblée.");
         return;
     }
 
@@ -55,56 +70,40 @@ btnGenerate.addEventListener('click', async () => {
     showSection(loadingSection);
 
     const formData = new FormData();
-    
-    // Manage CV
+
     if (cvFile) {
         formData.append('cv_file', cvFile);
     } else {
-        const textBlob = new Blob([userCvText], { type: 'text/plain' });
-        formData.append('cv_file', textBlob, 'cv_paste.txt');
+        formData.append('cv_file', new Blob([userCvText], { type: 'text/plain' }), 'cv_paste.txt');
     }
-    
-    // Manage Offer
-    formData.append('job_offer', jobOffer);
 
-    // Manage Examples
-    if (exampleFiles && exampleFiles.length > 0) {
-        for (let i = 0; i < exampleFiles.length; i++) {
-            formData.append('example_files', exampleFiles[i]);
-        }
-    }
-    
-    // Manage Language
+    formData.append('job_offer', jobOffer);
     formData.append('language', language);
 
+    for (const file of exampleFiles) {
+        formData.append('example_files', file);
+    }
+
     try {
-        const resp = await fetch('/api/cover-letter/generate', {
-            method: 'POST',
-            body: formData,
-        });
+        const data = await apiRequest('/api/cover-letter/generate', withAuth({ method: 'POST', body: formData }));
 
-        if (!resp.ok) {
-            const err = await resp.json().catch(() => ({}));
-            throw new Error(err.detail || `Erreur ${resp.status}`);
-        }
-
-        const data = await resp.json();
-        
-        // Render Result
-        resultSummary.textContent = data.summary;
         letterContent.textContent = data.letter_body;
-        
         showSection(resultSection);
 
+        const matchScoreBox = document.getElementById('match-score-box');
+        if (matchScoreBox) matchScoreBox.style.display = 'none';
+
     } catch (err) {
-        alert(`Erreur lors de la génération : ${err.message}`);
+        showGenerateError(`Erreur lors de la génération : ${err.message}`);
         showSection(setupSection);
     } finally {
         btnGenerate.disabled = false;
         btnCopy.classList.remove('copied');
         btnCopy.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copier';
     }
-});
+}
+
+btnGenerate.addEventListener('click', debounce(doGenerate, 400));
 
 // ---------------------------------------------------------------------------
 // 2. Copy to Clipboard
@@ -114,12 +113,11 @@ btnCopy.addEventListener('click', async () => {
         await navigator.clipboard.writeText(letterContent.textContent);
         btnCopy.classList.add('copied');
         btnCopy.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="20 6 9 17 4 12"></polyline></svg> Copié !';
-        
         setTimeout(() => {
             btnCopy.classList.remove('copied');
             btnCopy.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copier';
         }, 2000);
-    } catch (err) {
+    } catch {
         alert('Impossible de copier le texte automatiquement.');
     }
 });
@@ -128,68 +126,62 @@ btnCopy.addEventListener('click', async () => {
 // 3. New Letter
 // ---------------------------------------------------------------------------
 btnNew.addEventListener('click', () => {
-    cvFileInput.value = '';
-    cvInput.value = '';
-    offerInput.value = '';
+    cvFileInput.value    = '';
+    cvInput.value        = '';
+    offerInput.value     = '';
     examplesInputs.value = '';
-    revisionInput.value = '';
-    resultSummary.textContent = '';
+    revisionInput.value  = '';
     letterContent.textContent = '';
-    revisionStatus.classList.add('hidden');
-    
+    hideGenerateError();
+    if (revisionStatus) revisionStatus.classList.add('hidden');
     showSection(setupSection);
 });
 
 // ---------------------------------------------------------------------------
-// 4. Revise Letter
+// 4. Revise Letter (debounced to prevent double-submission)
 // ---------------------------------------------------------------------------
-btnRevise.addEventListener('click', async () => {
+async function doRevise() {
     const instructions = revisionInput.value.trim();
     if (!instructions) {
         alert('Veuillez spécifier la modification souhaitée.');
         return;
     }
 
-    // Pass the raw text of the current letter
-    const currentLetterText = letterContent.innerText;
-    const language = languageSelect.value;
-    
-    // UI state loading
     btnRevise.disabled = true;
-    revisionStatus.classList.remove('hidden');
+    if (revisionStatus) revisionStatus.classList.remove('hidden');
 
     try {
-        const resp = await fetch('/api/cover-letter/revise', {
+        const data = await apiRequest('/api/cover-letter/revise', withAuth({
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                current_letter: currentLetterText,
-                instructions: instructions,
-                language: language
-            })
-        });
+                current_letter: letterContent.innerText,
+                instructions,
+                language: languageSelect.value,
+                job_offer: offerInput.value.trim(),
+            }),
+        }));
 
-        if (!resp.ok) {
-            const err = await resp.json().catch(() => ({}));
-            throw new Error(err.detail || `Erreur ${resp.status}`);
-        }
-
-        const data = await resp.json();
-        
-        // Output format mapping
-        resultSummary.textContent = `[Révision] ${data.summary}`;
         letterContent.textContent = data.letter_body;
-        
-        // Clear input
         revisionInput.value = '';
 
-    } catch (error) {
-        console.error(error);
-        alert(`Erreur lors de la révision : ${error.message}`);
+    } catch (err) {
+        alert(`Erreur lors de la révision : ${err.message}`);
     } finally {
         btnRevise.disabled = false;
-        revisionStatus.classList.add('hidden');
+        if (revisionStatus) revisionStatus.classList.add('hidden');
+    }
+}
+
+btnRevise.addEventListener('click', debounce(doRevise, 400));
+
+// ---------------------------------------------------------------------------
+// Pre-fill job offer from Job Search page (via localStorage relay)
+// ---------------------------------------------------------------------------
+document.addEventListener('DOMContentLoaded', () => {
+    const prefilledJob = localStorage.getItem('last_job_offer');
+    if (prefilledJob && offerInput) {
+        offerInput.value = prefilledJob;
+        localStorage.removeItem('last_job_offer');
     }
 });

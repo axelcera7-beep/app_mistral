@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Trouver des Jobs — JobMind</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css?v=4">
+    <link rel="stylesheet" href="jobsearch.css?v=2">
+    <script src="auth.js?v=4"></script>
+    <script>
+        if (!localStorage.getItem('auth_token')) {
+            window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname);
+        }
+    </script>
+</head>
+
+<body class="">
+    <div class="background-glow"></div>
+
+    <main class="container">
+        <a href="/" class="back-link" style="display:block;text-align:center">← JobMind</a>
+
+        <section class="search-container glass-card">
+            <form id="search-form" class="search-grid">
+                <div class="input-group">
+                    <label for="keywords"><i class="fas fa-search"></i> Poste / Mots-clés</label>
+                    <input type="text" id="keywords" placeholder="ex: Développeur Python, Data Scientist..." required>
+                </div>
+                <div class="input-group">
+                    <label for="location"><i class="fas fa-map-marker-alt"></i> Ville / Lieu</label>
+                    <input type="text" id="location" placeholder="ex: Paris, Lyon, Remote... (optionnel)">
+                </div>
+                <div class="input-group cv-input-group">
+                    <label for="cv-text-input"><i class="fas fa-file-alt"></i> Votre CV / Profil <span
+                            class="hint">(Importez un fichier ou collez le texte)</span></label>
+                    <div class="cv-upload-container">
+                        <input type="file" id="cv-upload" accept=".pdf,.docx,.txt" class="hidden">
+                        <button type="button" class="btn btn-outline btn-sm" id="cv-upload-btn">
+                            <i class="fas fa-file-upload"></i> Ajouter mon CV (PDF/DOCX)
+                        </button>
+                        <div id="cv-status" class="cv-status hidden">
+                            <i class="fas fa-check-circle"></i> <span id="cv-filename"></span>
+                            <button type="button" id="clear-cv" class="btn-icon" title="Supprimer le fichier">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <textarea id="cv-text-input" rows="3"
+                        placeholder="Ou collez directement le texte de votre CV ici..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" id="search-btn">
+                    <span class="btn-text">Lancer la recherche</span>
+                    <i class="fas fa-rocket"></i>
+                </button>
+            </form>
+        </section>
+
+        <div id="loading" class="hidden">
+            <div class="loader"></div>
+            <p>Recherche en cours & Calcul de compatibilité...</p>
+        </div>
+
+        <section id="results-section" class="results-list">
+            <!-- Results will be injected here -->
+        </section>
+    </main>
+
+    <script src="jobsearch.js?v=2"></script>
+</body>
+
+</html>

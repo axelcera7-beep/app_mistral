@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Connexion — JobMind">
+    <title>🔐 Connexion — JobMind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="interview.css?v=5">
+    <link rel="stylesheet" href="login.css?v=2">
+</head>
+<body>
+
+    <div class="background-glow"></div>
+
+    <main class="container">
+        <a href="/" class="back-link" style="display:block;text-align:center">← JobMind</a>
+
+        <section class="login-section">
+            <div class="setup-card">
+                <!-- Tabs -->
+                <div class="auth-tabs">
+                    <button class="auth-tab active" id="tab-login" data-tab="login">Connexion</button>
+                    <button class="auth-tab" id="tab-register" data-tab="register">Inscription</button>
+                </div>
+
+                <!-- Login Form -->
+                <form id="form-login" class="auth-form">
+                    <div class="field-group">
+                        <label for="login-username">👤 Nom d'utilisateur</label>
+                        <input type="text" id="login-username" placeholder="Votre nom d'utilisateur" required autocomplete="username">
+                    </div>
+                    <div class="field-group">
+                        <label for="login-password">🔒 Mot de passe</label>
+                        <input type="password" id="login-password" placeholder="Votre mot de passe" required autocomplete="current-password">
+                    </div>
+                    <button type="submit" class="btn-start" id="btn-login">
+                        Se connecter
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </button>
+                </form>
+
+                <!-- Register Form -->
+                <form id="form-register" class="auth-form" hidden>
+                    <div class="field-group">
+                        <label for="register-username">👤 Nom d'utilisateur</label>
+                        <input type="text" id="register-username" placeholder="Choisissez un nom d'utilisateur" required minlength="3" maxlength="50" autocomplete="username">
+                    </div>
+                    <div class="field-group">
+                        <label for="register-email">📧 Email</label>
+                        <input type="email" id="register-email" placeholder="votre@email.com" required autocomplete="email">
+                    </div>
+                    <div class="field-group">
+                        <label for="register-password">🔒 Mot de passe</label>
+                        <input type="password" id="register-password" placeholder="Minimum 6 caractères" required minlength="6" autocomplete="new-password">
+                    </div>
+                    <button type="submit" class="btn-start" id="btn-register">
+                        Créer mon compte
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </button>
+                </form>
+
+                <!-- Error message -->
+                <p class="auth-error" id="auth-error" hidden></p>
+            </div>
+        </section>
+    </main>
+
+    <script src="auth.js?v=4"></script>
+    <script src="login.js"></script>
+</body>
+</html>

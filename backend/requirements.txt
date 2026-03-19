@@ -2,9 +2,14 @@ fastapi==0.115.12
 uvicorn[standard]
 mistralai>=1.1.0,<2.0.0
 python-multipart
-python-dotenv
+python-dotenv==1.1.0
 pydantic
 pydantic-settings
 PyMuPDF
 python-docx
-python-dotenv==1.1.0
+sqlalchemy
+passlib[bcrypt]
+bcrypt
+python-jose[cryptography]
+numpy
+httpx

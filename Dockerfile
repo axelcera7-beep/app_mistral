@@ -21,6 +21,9 @@ COPY backend/app ./app
 # Copy frontend
 COPY frontend ./frontend
 
+# Create data directory for SQLite
+RUN mkdir -p data && chmod 777 data
+
 # Expose the default port
 EXPOSE 8000
 

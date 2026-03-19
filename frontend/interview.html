@@ -4,26 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Entraînez-vous aux entretiens d'embauche avec un recruteur IA propulsé par Mistral.">
-    <title>💬 Coach Entretien — Décodeur de Pensées</title>
+    <title>💬 Coach Entretien — JobMind</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="interview.css">
+    <link rel="stylesheet" href="interview.css?v=5">
 </head>
 <body>
 
     <div class="background-glow"></div>
 
     <main class="container">
-        <!-- Header -->
-        <header class="header">
-            <a href="/" class="back-link">← Décodeur de Pensées</a>
-            <div class="logo">
-                <span class="logo-icon">💬</span>
-                <h1>Coach Entretien</h1>
-            </div>
-            <p class="subtitle">Entraînez-vous avec un recruteur IA personnalisé.</p>
-        </header>
+        <a href="/" class="back-link" style="display:block;text-align:center">← JobMind</a>
 
         <!-- Phase 1: Setup -->
         <section class="setup-section" id="setup-section">
@@ -37,6 +29,14 @@
                     <label for="offer-input">🏢 Offre de stage/emploi <span class="hint">(collez le texte)</span></label>
                     <textarea id="offer-input" rows="6" placeholder="Collez ici le texte de l'offre…"></textarea>
                 </div>
+                <div class="field-group webcam-toggle-group">
+                    <label class="webcam-toggle-label">
+                        <input type="checkbox" id="webcam-toggle" checked>
+                        <span class="toggle-slider"></span>
+                        📹 Activer l'analyse visuelle (webcam)
+                    </label>
+                    <span class="hint">L'IA analysera votre langage corporel pendant l'entretien.</span>
+                </div>
                 <button class="btn-start" id="btn-start">
                     Démarrer l'entretien
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -44,13 +44,19 @@
             </div>
         </section>
 
+        <!-- Webcam Preview (floating PiP) -->
+        <div class="webcam-pip" id="webcam-pip" hidden>
+            <video id="webcam-video" autoplay muted playsinline></video>
+            <div class="webcam-pip-badge">📹 Analyse active</div>
+        </div>
+
         <!-- Phase 2: Chat -->
         <section class="chat-section" id="chat-section" hidden>
             <div class="chat-messages" id="chat-messages"></div>
 
             <div class="chat-input-area" id="chat-input-area">
                 <!-- Record Button (Voice Mode) -->
-                <button class="btn-voice-record" id="btn-voice-record" aria-label="Enregistrer une réponse vocale" title="Répondre vocalement">
+                <button class="btn-voice-record" id="btn-voice-record" aria-label="Enregistrer une réponse vocale" title="Répondre vocalement" disabled>
                     <span class="record-inner">
                         <svg viewBox="0 0 24 24" fill="none" class="mic-icon" stroke="currentColor" stroke-width="2" width="20" height="20">
                             <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
@@ -63,14 +69,14 @@
                     <span class="pulse-ring"></span>
                 </button>
                 
-                <textarea id="user-input" rows="2" placeholder="Tapez ou dictez votre réponse…" autocomplete="off"></textarea>
-                
-                <button class="btn-send" id="btn-send" aria-label="Envoyer" title="Envoyer le texte">
+                <textarea id="user-input" rows="2" placeholder="Tapez ou dictez votre réponse…" autocomplete="off" disabled></textarea>
+
+                <button class="btn-send" id="btn-send" aria-label="Envoyer" title="Envoyer le texte" disabled>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg>
                 </button>
             </div>
 
-            <button class="btn-end" id="btn-end">Terminer l'entretien</button>
+            <button class="btn-end" id="btn-end" disabled>Terminer l'entretien</button>
         </section>
 
         <!-- Phase 3: Loading feedback -->
@@ -103,6 +109,24 @@
                 </div>
             </div>
 
+            <!-- Visual Analysis Report -->
+            <div class="visual-report-card" id="visual-report-card" hidden>
+                <h2>📹 Analyse Visuelle</h2>
+                <div class="visual-score-row">
+                    <span class="visual-label">Niveau de confiance :</span>
+                    <div class="visual-score-circle" id="visual-score-circle">
+                        <span class="score-value" id="visual-score-value">-</span>
+                        <span class="score-label">/10</span>
+                    </div>
+                </div>
+                <p class="visual-impression" id="visual-impression"></p>
+                <div class="visual-observations" id="visual-observations"></div>
+                <div class="visual-recommendations">
+                    <h3>💡 Recommandations visuelles</h3>
+                    <ul id="visual-recommendations-list"></ul>
+                </div>
+            </div>
+
             <div class="advice-card" id="advice-card">
                 <h3>💡 Conseil principal</h3>
                 <p id="advice-text"></p>
@@ -114,6 +138,7 @@
         </section>
     </main>
 
-    <script src="interview.js"></script>
+    <script src="auth.js?v=4"></script>
+    <script src="interview.js?v=4"></script>
 </body>
 </html>
