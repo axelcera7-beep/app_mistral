@@ -85,8 +85,12 @@ async def analyze_visual(frames_b64: list[str], job_offer: str = "") -> VisualAn
 
     system_prompt = VISUAL_ANALYSIS_PROMPT.format(n_frames=len(frames_b64))
 
-    # JSON schema for structured output
+    # Include JSON schema in the prompt so the model knows the expected format
     report_schema = VisualAnalysisReport.model_json_schema()
+    schema_instruction = (
+        "\n\nRéponds UNIQUEMENT avec un objet JSON valide respectant ce schéma :\n"
+        + json.dumps(report_schema, ensure_ascii=False, indent=2)
+    )
 
     logger.info("Analyzing %d webcam frames with Vision model (%s)...", len(frames_b64), get_settings().vision_model)
 
@@ -96,17 +100,10 @@ async def analyze_visual(frames_b64: list[str], job_offer: str = "") -> VisualAn
             response = await client.chat.complete_async(
                 model=get_settings().vision_model,
                 messages=[
-                    {"role": "system", "content": system_prompt},
+                    {"role": "system", "content": system_prompt + schema_instruction},
                     {"role": "user", "content": content_parts},
                 ],
-                response_format={
-                    "type": "json_schema",
-                    "json_schema": {
-                        "name": "visual_analysis_report",
-                        "schema": report_schema,
-                        "strict": True,
-                    },
-                },
+                response_format={"type": "json_object"},
                 temperature=0.3,
             )
 
